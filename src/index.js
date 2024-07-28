@@ -1,15 +1,16 @@
 const { launchBrowser } = require('./browser');
 const { performLogin } = require('./login');
-const { navigateToDashboard } = require('./navigation');
+const { navigateToUrl } = require('./navigation');
 const config = require('../config');
 
 async function main() {
   const browser = await launchBrowser();
-  const page = await browser.newPage();
+  const mainPage = await browser.newPage();
 
   try {
-    await performLogin(page, config);
-    await navigateToDashboard(page, config);
+    await navigateToUrl(mainPage, config.loginUrl)
+    await performLogin(mainPage, config);
+    await navigateToUrl(mainPage, config.roomUrl);
     console.log('Login and navigation successful!');
   } catch (error) {
     console.error('An error occurred:', error);
