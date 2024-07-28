@@ -1,0 +1,12 @@
+{
+  "name": "puppeteer-login-project",
+  "version": "1.0.0",
+  "description": "A sample project to demonstrate Puppeteer login automation",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "puppeteer": "^19.7.2"
+  }
+}
