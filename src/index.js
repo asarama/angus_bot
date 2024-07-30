@@ -3,6 +3,16 @@ const { performLogin } = require('./login');
 const { navigateToUrl } = require('./navigation');
 const config = require('../config');
 
+
+async function pause(delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('Promise resolved after ' + delay + ' milliseconds');
+    }, delay);
+  });
+}
+
+
 async function main() {
   const browser = await launchBrowser();
   const mainPage = await browser.newPage();
@@ -14,14 +24,13 @@ async function main() {
 
     // Set Duration
     await mainPage.tap('#facility-page-content > div.facility-selected-items.second-row > span > span > span.k-select > span')
-    await mainPage.waitForTimeout(500);
+    await pause(500);
     await mainPage.tap('#service-duration-dropdown_listbox > li:nth-child(4)')
+    await pause(250);
 
     // Set Number of people to attend
     await mainPage.tap('#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase')
-    await mainPage.waitForTimeout(1000);
-    await mainPage.tap('#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase')
-    // No idea why I need a third tap
+    await pause(250);
     await mainPage.tap('#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase')
 
 
