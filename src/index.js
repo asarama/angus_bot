@@ -1,7 +1,28 @@
+
+const moment = require("moment")
+
 const { launchBrowser } = require("./browser");
 const { performLogin } = require("./login");
 const { navigateToUrl } = require("./navigation");
 const config = require("../config");
+
+function parseDateRange(dateRangeString) {
+  // Extract the year from the end of the string
+  const splitDateString = dateRangeString.split(', ');
+  const year = splitDateString[1]
+  const datesWithoutYear = splitDateString[0];
+  
+  // Split the remaining string into start and end date parts
+  const [startDateStr, endDateStr] = datesWithoutYear.split(' - ');
+  
+  // Parse the start date
+  const startDate = moment(`${startDateStr} ${year}`, 'MMM D YYYY');
+  
+  // Parse the end date
+  const endDate = moment(`${endDateStr} ${year}`, 'MMM D YYYY');
+  
+  return { startDate, endDate };
+}
 
 const pause = async (delay) => {
   return new Promise((resolve) => {
@@ -11,7 +32,7 @@ const pause = async (delay) => {
   });
 }
 
-
+const TARGETDATESTRING = "2024-07-31"
 
 const main = async () => {
   const browser = await launchBrowser();
@@ -46,8 +67,13 @@ const main = async () => {
       return titleElement.innerText;
     });
     console.log("Title text:", tableDateRange);
+    const { startDate, endDate } = parseDateRange(tableDateRange)
 
-    // Make the date we are interested the final date by clicking the back and forward arrows
+    const targetDate = moment(TARGETDATESTRING)
+
+    // If targetDate < startDate throw error - can't book rooms for the past
+    // If startDate <= targetDate =< endDate - should be able to find the cell to select
+    // If endDate < targetDate - click next date button and reevaluate
     
     // Click the cell of interest
 
