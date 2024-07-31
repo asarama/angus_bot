@@ -3,7 +3,7 @@ const { performLogin } = require("./login");
 const { navigateToUrl } = require("./navigation");
 const config = require("../config");
 
-async function pause(delay) {
+const pause = async (delay) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve("Promise resolved after " + delay + " milliseconds");
@@ -11,7 +11,9 @@ async function pause(delay) {
   });
 }
 
-async function main() {
+
+
+const main = async () => {
   const browser = await launchBrowser();
   const mainPage = await browser.newPage();
 
