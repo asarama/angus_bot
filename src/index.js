@@ -33,6 +33,23 @@ const pause = async (delay) => {
   });
 }
 
+const confirmTargetDateInRange = (targetDate) => {
+  const currentDate = moment().format('YYYY-MM-DD');
+
+  // If targetDate < startDate throw error - can't book rooms for the past
+  if (targetDate < currentDate) {
+    throw new Error(`Can't book rooms for the past. \n Target date (${targetDate}) < today (${currentDate})`);
+  }
+
+  // We can book 7 days in advance, but we add 8 days because currentDate is 
+  // set to the start of the day
+  const farthestDate = currentDate.clone().add(8, 'days');
+
+  if (currentDate > farthestDate) {
+    throw new Error(`Can't book rooms more than 7 days in advance. \n Target date (${targetDate})`);
+  }
+}
+
 const TARGETDATESTRING = "2024-07-31"
 
 const main = async () => {
@@ -61,12 +78,8 @@ const main = async () => {
       "#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase"
     );
 
-    const currentDate = moment().format('YYYY-MM-DD');
-
-    // If targetDate < startDate throw error - can't book rooms for the past
-    if (targetDate < currentDate) {
-      throw new Error(`Can't book rooms for the past. \n Target date (${targetDate}) < today (${currentDate})`);
-    }
+    const targetDate = moment(TARGETDATESTRING)
+    confirmTargetDateInRange(targetDate)
 
     // Read current date range
     // Get inner text
@@ -76,8 +89,6 @@ const main = async () => {
     });
     console.log("Title text:", tableDateRange);
     const { startDate, endDate } = parseDateRange(tableDateRange)
-
-    const targetDate = moment(TARGETDATESTRING)
 
     // If startDate <= targetDate =< endDate - should be able to find the cell to select
     // If endDate < targetDate - click next date button and reevaluate
