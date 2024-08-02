@@ -19,7 +19,14 @@ function parseDateRange(dateRangeString) {
   const startDate = moment(`${startDateStr} ${year}`, "MMM D YYYY");
 
   // Parse the end date
-  const endDate = moment(`${endDateStr} ${year}`, "MMM D YYYY");
+  let endDate;
+  if (endDateStr.includes(' ')) {
+    // If endDateStr includes a month, parse it normally
+    endDate = moment(`${endDateStr} ${year}`, 'MMM D YYYY');
+  } else {
+    // If endDateStr is just a day, use the month from startDate
+    endDate = moment(`${startDate.format('MMM')} ${endDateStr} ${year}`, 'MMM D YYYY');
+  }
 
   return { startDate, endDate };
 }
