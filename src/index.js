@@ -96,6 +96,8 @@ const main = async () => {
     } else if (endDate < targetDate) {
       // If endDate < targetDate - click next date button and reevaluate
       await mainPage.tap("#facility-page-content > div.scheduler-wrapper > div.sheduler-nav > div.sheduler-nav-btn.next")
+    } else {
+      throw new Error("Woah.... Something probably went wrong with the date assertions")
     }
     
     // Click the cell of interest
