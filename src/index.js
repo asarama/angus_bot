@@ -91,7 +91,12 @@ const main = async () => {
     const { startDate, endDate } = parseDateRange(tableDateRange)
 
     // If startDate <= targetDate =< endDate - should be able to find the cell to select
-    // If endDate < targetDate - click next date button and reevaluate
+    if (startDate <= targetDate && targetDate <= endDate) {
+      // Target date is in range now we need to find the correct cell
+    } else if (endDate < targetDate) {
+      // If endDate < targetDate - click next date button and reevaluate
+      await mainPage.tap("#facility-page-content > div.scheduler-wrapper > div.sheduler-nav > div.sheduler-nav-btn.next")
+    }
     
     // Click the cell of interest
 
