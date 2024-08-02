@@ -92,7 +92,7 @@ const getTargetCellInView = async (targetDate, mainPage) => {
   }
 };
 
-const TARGETDATESTRING = "2024-08-08";
+const TARGETDATESTRING = "2024-08-04";
 
 const main = async () => {
 
@@ -128,6 +128,12 @@ const main = async () => {
     await getTargetCellInView(targetDate, mainPage);
 
     // Click the cell of interest
+    // This will be crazy hard...
+    // The cells are all organized as children of one element
+    // wait...
+    // We can actually use the table element instead!
+
+    await mainPage.tap("#scheduler > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(4)");
 
     console.log("Login and navigation successful!");
   } catch (error) {
