@@ -5,6 +5,7 @@ const { launchBrowser } = require("./browser");
 const { performLogin } = require("./login");
 const { navigateToUrl } = require("./navigation");
 const config = require("../config");
+const { assert } = require("puppeteer");
 
 function parseDateRange(dateRangeString) {
   // Extract the year from the end of the string
@@ -60,6 +61,13 @@ const main = async () => {
       "#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase"
     );
 
+    const currentDate = moment().format('YYYY-MM-DD');
+
+    // If targetDate < startDate throw error - can't book rooms for the past
+    if (targetDate < currentDate) {
+      throw new Error(`Can't book rooms for the past. \n Target date (${targetDate}) < today (${currentDate})`);
+    }
+
     // Read current date range
     // Get inner text
     const tableDateRange = await mainPage.evaluate(() => {
@@ -71,7 +79,6 @@ const main = async () => {
 
     const targetDate = moment(TARGETDATESTRING)
 
-    // If targetDate < startDate throw error - can't book rooms for the past
     // If startDate <= targetDate =< endDate - should be able to find the cell to select
     // If endDate < targetDate - click next date button and reevaluate
     
