@@ -33,7 +33,7 @@ const pause = async (delay) => {
 };
 
 const confirmTargetDateInRange = (targetDate) => {
-  const currentDate = moment().format("YYYY-MM-DD");
+  const currentDate = moment(moment().format("YYYY-MM-DD"));
 
   // If targetDate < startDate throw error - can't book rooms for the past
   if (targetDate < currentDate) {
@@ -42,11 +42,10 @@ const confirmTargetDateInRange = (targetDate) => {
     );
   }
 
-  // We can book 7 days in advance, but we add 8 days because currentDate is
-  // set to the start of the day
-  const farthestDate = currentDate.clone().add(8, "days");
+  // We can book upto 7 days in advance
+  const farthestDate = moment(currentDate).add(7, "days");
 
-  if (currentDate > farthestDate) {
+  if (targetDate > farthestDate) {
     throw new Error(
       `Can't book rooms more than 7 days in advance. \n Target date (${targetDate})`
     );
@@ -86,9 +85,14 @@ const getTargetCellInView = async (targetDate, mainPage) => {
   }
 };
 
-const TARGETDATESTRING = "2024-07-31";
+const TARGETDATESTRING = "2024-08-08";
 
 const main = async () => {
+
+  // Confirm date is not in the past and not too far into the future
+  const targetDate = moment(TARGETDATESTRING);
+  confirmTargetDateInRange(targetDate);
+
   const browser = await launchBrowser();
   const mainPage = await browser.newPage();
 
@@ -113,10 +117,6 @@ const main = async () => {
     await mainPage.tap(
       "#facility-page-content > div.number-of-people-input > span > span > span.k-select > span.k-link.k-link-increase"
     );
-
-    const targetDate = moment(TARGETDATESTRING);
-
-    confirmTargetDateInRange(targetDate);
 
     await getTargetCellInView(targetDate, mainPage);
 
