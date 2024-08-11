@@ -59,10 +59,10 @@ const confirmTargetDateInRange = (targetDate) => {
   }
 };
 
-const getTargetCellInView = async (targetDate, mainPage) => {
+const getTargetCellInView = async (targetDate, page) => {
   // Read current date range
   // Get inner text
-  const tableDateRange = await mainPage.evaluate(() => {
+  const tableDateRange = await page.evaluate(() => {
     const titleElement = document.querySelector(
       "#facility-page-content > div.scheduler-wrapper > div.sheduler-nav > div.sheduler-nav-status"
     );
@@ -79,17 +79,37 @@ const getTargetCellInView = async (targetDate, mainPage) => {
   } else if (endDate < targetDate) {
 
     // If endDate < targetDate - click next date button and reevaluate
-    await mainPage.tap(
+    await page.tap(
       "#facility-page-content > div.scheduler-wrapper > div.sheduler-nav > div.sheduler-nav-btn.next"
     );
 
-    await getTargetCellInView(targetDate, mainPage);
+    await getTargetCellInView(targetDate, page);
 
   } else {
     throw new Error(
       "Oh....\nSomething probably went wrong with the date assertions"
     );
   }
+};
+
+const clickTargetTimeslotElement = async (targetDate, targetSlot, page) => {
+  // Basic structure of query
+  // "#scheduler > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(4)"
+  // 
+  // This is the main section that will change
+  // tbody > tr:nth-child(3) > td:nth-child(4)
+  // The 3 needs to be replaced using the targetSlot input
+  // Iterate through the left most column of the table to find which row the targetSlot is in
+  // This row number replace the 3
+  // Leftmost column selector:
+  // #scheduler > table > tbody > tr:nth-child(2) > td:nth-child(1) > div > table > tbody
+  // 
+  // The 4 needs to be replaced using the targetDate input
+  // Iterate through the date columns and see which column index we need to use
+  // This number will replace the 4
+  // The selector for this row is:
+  // #scheduler > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > table > tbody > tr
+
 };
 
 const TARGETDATESTRING = "2024-08-04";
@@ -132,8 +152,7 @@ const main = async () => {
     // The cells are all organized as children of one element
     // wait...
     // We can actually use the table element instead!
-
-    await mainPage.tap("#scheduler > table > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(4)");
+    await clickTargetTimeslotElement(targetDate, "10:00 AM", mainPage)
 
     console.log("Login and navigation successful!");
   } catch (error) {
